@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ImageRotator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Image Rotator" Height="450" Width="800">
     <Grid>
-        
+        <local:ImageView/>
     </Grid>
 </Window>
