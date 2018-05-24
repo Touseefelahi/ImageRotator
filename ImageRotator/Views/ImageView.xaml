@@ -10,6 +10,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
@@ -34,23 +35,28 @@
             <TextBlock Text="{Binding Angle, StringFormat={}{0:n5}}" Foreground="Green"  ></TextBlock>
         </StackPanel>
 
-        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible" >
+        <ScrollViewer x:Name="ScrollView" Grid.Row="1" HorizontalScrollBarVisibility="Visible" >
+
             <Image Grid.Row="1" x:Name="Image" Stretch="None"
-               Source="{Binding Graphics, Converter={local:EmguImageToWpfImageConverter}}">
+               Source="{Binding Graphics, Converter={local:EmguImageToWpfImageConverter}}" >
+
                 <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="MouseUp">
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
                         <i:InvokeCommandAction Command="{Binding CommandMouseUp}" 
                                    CommandParameter="{Binding ElementName=Image}"/>
+                    </i:EventTrigger>
+
+                    <i:EventTrigger EventName="PreviewMouseRightButtonDown">
+                        <i:InvokeCommandAction Command="{Binding CommandResetFirstPoint}"/>
                     </i:EventTrigger>
 
                     <i:EventTrigger EventName="MouseMove">
                         <i:InvokeCommandAction Command="{Binding CommandMouseMove}" 
                                    CommandParameter="{Binding ElementName=Image}"/>
                     </i:EventTrigger>
-
                 </i:Interaction.Triggers>
-
             </Image>
         </ScrollViewer>
+
     </Grid>
 </local:BasePage>
