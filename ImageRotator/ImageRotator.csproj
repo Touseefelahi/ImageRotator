@@ -84,8 +84,10 @@
     <Compile Include="IoC\IoC.cs" />
     <Compile Include="Models\FirstPointPosition.cs" />
     <Compile Include="ValueConverters\BaseValueConverter.cs" />
+    <Compile Include="ValueConverters\BoolToColor.cs" />
     <Compile Include="ValueConverters\BoolToSelectionPointString.cs" />
     <Compile Include="ValueConverters\EmguImageToWpfImageConverter.cs" />
+    <Compile Include="ValueConverters\IntToInfo.cs" />
     <Compile Include="ViewModels\Base\BaseViewModel.cs" />
     <Compile Include="ViewModels\Base\RelayCommand.cs" />
     <Compile Include="ViewModels\Base\RelayCommandParameterized.cs" />

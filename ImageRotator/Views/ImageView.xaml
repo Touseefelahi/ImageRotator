@@ -9,7 +9,18 @@
              xmlns:local="clr-namespace:ImageRotator"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="800">
+    
+    <UserControl.InputBindings>
+        <KeyBinding Key="S"  Command="{Binding CommandKeyInput}" CommandParameter="S"/>
+        <KeyBinding Key="N"  Command="{Binding CommandKeyInput}" CommandParameter="N"/>
+
+    </UserControl.InputBindings>
+    
+    <UserControl.Resources>        
+        
+    <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -17,6 +28,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
+        
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Button Content="Open" Margin="2" Command="{Binding CommandOpenImage}"/>
             <Button Content="Undo" Margin="2" Command="{Binding CommandShowDefault}"/>
@@ -26,7 +38,9 @@
         </StackPanel>
         <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding ImageCounterDisplay}"/>
         <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,10,2" Text="{Binding Info}"/>
-        <TextBlock Grid.Row="1" VerticalAlignment="Top" Panel.ZIndex="1" Margin="10" HorizontalAlignment="Center" Background="White" Foreground="Red" Text="{Binding IsPointA,Converter={local:BoolToSelectionPointString}}"/>
+        <TextBlock Grid.Row="1" VerticalAlignment="Top" FontSize="20" Panel.ZIndex="1" Margin="10" HorizontalAlignment="Center"
+                   Background="White" Foreground="Red" Text="{Binding ReferencePointCounter,Converter={local:IntToInfo}}"/>
+
         <TextBlock Grid.Row="1" Text="{Binding MousePositionCurrent}" Panel.ZIndex="1" Margin="20" Background="White" VerticalAlignment="Bottom" HorizontalAlignment="Center" Foreground="Red"></TextBlock>
        
         <StackPanel Background="White" Grid.Row="1" VerticalAlignment="Bottom" Panel.ZIndex="1" Margin="20" HorizontalAlignment="Right">
@@ -35,6 +49,10 @@
             <TextBlock Text="{Binding Angle, StringFormat={}{0:n5}}" Foreground="Green"  ></TextBlock>
         </StackPanel>
 
+        <ToggleButton x:Name="buttonHelp" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Right"  Panel.ZIndex="1" Margin="0,0,20,0" Content="Help"/>
+        <TextBlock Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Right" Background="White" Margin="20" TextAlignment="Center" Panel.ZIndex="1" 
+                   Visibility="{Binding ElementName=buttonHelp, Path=IsChecked, Converter={StaticResource BoolToVis}}"
+                   Text="{Binding HelpText}"/>
         <ScrollViewer x:Name="ScrollView" Grid.Row="1" HorizontalScrollBarVisibility="Visible" >
 
             <Image Grid.Row="1" x:Name="Image" Stretch="None"
@@ -47,7 +65,8 @@
                     </i:EventTrigger>
 
                     <i:EventTrigger EventName="PreviewMouseRightButtonDown">
-                        <i:InvokeCommandAction Command="{Binding CommandResetFirstPoint}"/>
+                        <i:InvokeCommandAction Command="{Binding CommandRightMouseDown}"
+                                               CommandParameter="{Binding ElementName=Image}"/>
                     </i:EventTrigger>
 
                     <i:EventTrigger EventName="MouseMove">
@@ -57,6 +76,62 @@
                 </i:Interaction.Triggers>
             </Image>
         </ScrollViewer>
+        
+        <!--Reference 4-->
+        <StackPanel Grid.Row="1" Margin="0,0,0,0" Orientation="Vertical" Background="White" Panel.ZIndex="1" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TextBlock Text="Reference Value"/>
+            <ComboBox Text="Reference Point" SelectedItem="{Binding ReferenceValue}" Margin="0,0,0,10" ItemsSource="{Binding ReferencePointList}" >
+            </ComboBox>
+            
+            <StackPanel  Margin="2">
+                <TextBlock Text="Left Reference Point"/>
+                <TextBox  IsReadOnly="True"
+                          Text="{Binding ReferencePointLeft, StringFormat=N1}"
+                          Background="{Binding IsReferencePointLeft, Converter={local:BoolToColor}, ConverterParameter=false}"/>
+            </StackPanel>
+
+            <StackPanel Margin="2">
+                <TextBlock Text="Right Reference Point"/>
+                <TextBox IsReadOnly="True" 
+                         Text="{Binding ReferencePointRight, StringFormat=N1}"
+                         Background="{Binding IsReferencePointLeft, Converter={local:BoolToColor}, ConverterParameter=true}"/>
+            </StackPanel>
+            
+            <StackPanel Margin="2">
+                <TextBlock Text="Moving Reticle Point"/>
+                <TextBox IsReadOnly="True" Text="{Binding MovingReticlePosition, StringFormat=N1}"/>
+            </StackPanel>
+            
+            <StackPanel Margin="2">
+                <TextBlock Text="Zero Reference Point"/>
+                <TextBox Text="{Binding ZeroReference, StringFormat=N1}" IsReadOnly="True"/>
+            </StackPanel>
+            
+            <StackPanel Margin="2">
+                <TextBlock Text="Zero Reference Angle"/>
+                <TextBox Text="{Binding ZeroReferenceCorrection}"/>
+            </StackPanel>
+
+            <Button Command="{Binding CommandGetReticleShift}" Content="Calculate R-Shift" Margin="5"/>
+            
+            <StackPanel Margin="2">
+                <TextBlock Text="Reticle Shift (Pixels)"/>
+                <TextBox Text="{Binding MovingReticleShiftPixels}" IsReadOnly="True"/>
+            </StackPanel>
+
+            <StackPanel Margin="2">
+                <TextBlock Text="Reticle Shift (Mils)"/>
+                <TextBox Text="{Binding MovingReticleShiftAngle}" IsReadOnly="True"/>
+            </StackPanel>
+
+            <StackPanel Margin="2">
+                <TextBlock Text="Pixels / Mil (Pixels)"/>
+                <TextBox Text="{Binding AnglePerPixel}" IsReadOnly="True"/>
+            </StackPanel>
+            
+            <Button Command="{Binding CommandClearImage}" Content="Clear Image" Margin="5"/>
+            <Button Command="{Binding CommandNextImage}" Content="Next Image" Margin="5"/>
+        </StackPanel>
 
     </Grid>
 </local:BasePage>
